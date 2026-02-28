@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="64" fill="#3b82f6"/>
+  <g fill="white">
+    <!-- Sun -->
+    <circle cx="256" cy="200" r="60"/>
+    <g stroke="white" stroke-width="12" stroke-linecap="round">
+      <line x1="256" y1="100" x2="256" y2="120"/>
+      <line x1="256" y1="280" x2="256" y2="300"/>
+      <line x1="156" y1="200" x2="176" y2="200"/>
+      <line x1="336" y1="200" x2="356" y2="200"/>
+      <line x1="185" y1="129" x2="199" y2="143"/>
+      <line x1="313" y1="257" x2="327" y2="271"/>
+      <line x1="185" y1="271" x2="199" y2="257"/>
+      <line x1="313" y1="143" x2="327" y2="129"/>
+    </g>
+    <!-- Cloud -->
+    <ellipse cx="200" cy="380" rx="80" ry="50"/>
+    <ellipse cx="280" cy="360" rx="100" ry="60"/>
+    <ellipse cx="350" cy="380" rx="70" ry="45"/>
+  </g>
+</svg>
