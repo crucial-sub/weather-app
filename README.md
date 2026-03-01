@@ -202,7 +202,7 @@ src/
 
 ## 배포
 
-- **배포 URL**: (Vercel 배포 후 추가 예정)
+- **배포 URL**: https://weather-app-crucialsubs-projects.vercel.app/
 - **GitHub**: https://github.com/crucial-sub/weather-app
 
 ### Vercel 배포 방법
@@ -214,6 +214,30 @@ src/
 
 ---
 
-## 라이센스
+## PWA (Progressive Web App) 사용법
 
-MIT License
+이 앱은 PWA를 지원하여 네이티브 앱처럼 설치하고 오프라인에서도 사용할 수 있습니다.
+
+### 앱 설치
+
+**Chrome (데스크톱)**
+1. 배포 URL 접속
+2. 주소창 오른쪽의 설치 아이콘(⊕) 클릭
+3. "설치" 확인
+
+**Chrome (Android)**
+1. 배포 URL 접속
+2. 브라우저 메뉴(⋮) → "앱 설치" 또는 "홈 화면에 추가" 선택
+
+**Safari (iOS)**
+1. 배포 URL 접속
+2. 하단 공유 버튼(↑) 탭
+3. "홈 화면에 추가" 선택
+
+### 오프라인 지원
+
+- 한번 방문한 페이지는 Service Worker가 캐싱하여 네트워크 없이도 접근 가능합니다.
+- 오프라인 상태에서는 마지막으로 캐싱된 날씨 데이터가 표시됩니다.
+- 네트워크 복구 시 최신 데이터로 자동 갱신됩니다.
+
+> PWA 기능(오프라인 캐싱, 설치)은 **프로덕션 빌드**에서만 동작합니다. 로컬 개발 시에는 `npm run build && npm start`로 확인할 수 있습니다.
