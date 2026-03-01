@@ -17,7 +17,7 @@ interface WeeklyForecastProps {
 // 정적 스켈레톤 JSX를 컴포넌트 외부로 호이스팅하여 매 렌더링마다 재생성 방지
 const weeklyForecastSkeleton = (
   <Card className="p-4">
-    <h3 className="text-sm font-medium text-gray-600 mb-3">5일 예보</h3>
+    <h3 className="text-sm font-medium text-weather-text-tertiary mb-3">5일 예보</h3>
     <div className="space-y-3">
       {Array.from({ length: 5 }).map((_, i) => (
         <div key={i} className="flex items-center justify-between">
@@ -45,8 +45,8 @@ export const WeeklyForecast = memo(function WeeklyForecast({ forecast, isLoading
   const tempRange = maxTemp - minTemp || 1;
 
   return (
-    <Card className="p-4 lg:p-6 bg-white/80 backdrop-blur-sm">
-      <h3 className="text-sm font-medium text-gray-600 mb-3">5일 예보</h3>
+    <Card className="p-4 lg:p-6 bg-weather-glass backdrop-blur-sm">
+      <h3 className="text-sm font-medium text-weather-text-tertiary mb-3">5일 예보</h3>
       <div className="space-y-3 lg:space-y-4">
         {forecast.map((day, index) => {
           const leftPercent = ((day.tempMin - minTemp) / tempRange) * 100;
@@ -62,7 +62,7 @@ export const WeeklyForecast = memo(function WeeklyForecast({ forecast, isLoading
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <span className="text-sm text-gray-600 w-12 lg:w-16">{formatDay(day.date)}</span>
+              <span className="text-sm text-weather-text-tertiary w-12 lg:w-16">{formatDay(day.date)}</span>
 
               <Image
                 src={getWeatherIconUrl(day.icon)}
@@ -72,21 +72,21 @@ export const WeeklyForecast = memo(function WeeklyForecast({ forecast, isLoading
               />
 
               {/* 데스크탑 전용 날씨 설명 */}
-              <span className="hidden lg:inline text-sm text-gray-500 w-20 truncate">
+              <span className="hidden lg:inline text-sm text-weather-text-muted w-20 truncate">
                 {day.condition}
               </span>
 
-              <span className="text-sm text-blue-500 w-10 text-right">
+              <span className="text-sm text-weather-accent-blue w-10 text-right">
                 {formatTemperature(day.tempMin)}
               </span>
 
               <div
-                className="flex-1 h-1 lg:h-1.5 bg-gray-200 rounded-full relative overflow-hidden"
+                className="flex-1 h-1 lg:h-1.5 bg-weather-temp-bar-bg rounded-full relative overflow-hidden"
                 role="img"
                 aria-label={`최저 ${formatTemperature(day.tempMin)}, 최고 ${formatTemperature(day.tempMax)}`}
               >
                 <div
-                  className="absolute h-full bg-gradient-to-r from-blue-400 to-orange-400 rounded-full transition-all duration-300"
+                  className="absolute h-full bg-gradient-to-r from-weather-temp-bar-from to-weather-temp-bar-to rounded-full transition-all duration-300"
                   style={{
                     left: `${leftPercent}%`,
                     width: `${widthPercent}%`,
@@ -94,7 +94,7 @@ export const WeeklyForecast = memo(function WeeklyForecast({ forecast, isLoading
                 />
               </div>
 
-              <span className="text-sm text-orange-500 w-10">
+              <span className="text-sm text-weather-accent-orange w-10">
                 {formatTemperature(day.tempMax)}
               </span>
             </motion.div>

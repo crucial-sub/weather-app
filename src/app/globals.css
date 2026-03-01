@@ -45,6 +45,30 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* 날씨 앱 전용 CSS 변수 → Tailwind 색상 매핑 */
+  --color-weather-gradient-from: var(--weather-gradient-from);
+  --color-weather-gradient-to: var(--weather-gradient-to);
+  --color-weather-glass: var(--weather-glass);
+  --color-weather-glass-solid: var(--weather-glass-solid);
+  --color-weather-text-primary: var(--weather-text-primary);
+  --color-weather-text-secondary: var(--weather-text-secondary);
+  --color-weather-text-tertiary: var(--weather-text-tertiary);
+  --color-weather-text-muted: var(--weather-text-muted);
+  --color-weather-text-placeholder: var(--weather-text-placeholder);
+  --color-weather-accent-blue: var(--weather-accent-blue);
+  --color-weather-accent-orange: var(--weather-accent-orange);
+  --color-weather-error-bg: var(--weather-error-bg);
+  --color-weather-error-border: var(--weather-error-border);
+  --color-weather-error-text: var(--weather-error-text);
+  --color-weather-error-text-sub: var(--weather-error-text-sub);
+  --color-weather-error-icon: var(--weather-error-icon);
+  --color-weather-temp-bar-bg: var(--weather-temp-bar-bg);
+  --color-weather-temp-bar-from: var(--weather-temp-bar-from);
+  --color-weather-temp-bar-to: var(--weather-temp-bar-to);
+  --color-weather-hover: var(--weather-hover);
+  --color-weather-hover-accent: var(--weather-hover-accent);
+  --color-weather-border-accent: var(--weather-border-accent);
 }
 
 :root {
@@ -80,6 +104,30 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* 날씨 앱 전용 변수 — 라이트 모드 */
+  --weather-gradient-from: #eff6ff;   /* blue-50 */
+  --weather-gradient-to: #e0e7ff;     /* indigo-100 */
+  --weather-glass: rgba(255, 255, 255, 0.8);
+  --weather-glass-solid: #ffffff;
+  --weather-text-primary: #1f2937;    /* gray-800 */
+  --weather-text-secondary: #374151;  /* gray-700 */
+  --weather-text-tertiary: #4b5563;   /* gray-600 */
+  --weather-text-muted: #6b7280;      /* gray-500 */
+  --weather-text-placeholder: #9ca3af; /* gray-400 */
+  --weather-accent-blue: #3b82f6;     /* blue-500 */
+  --weather-accent-orange: #f97316;   /* orange-500 */
+  --weather-error-bg: #fef2f2;        /* red-50 */
+  --weather-error-border: #fecaca;    /* red-200 */
+  --weather-error-text: #991b1b;      /* red-800 */
+  --weather-error-text-sub: #dc2626;  /* red-600 */
+  --weather-error-icon: #f87171;      /* red-400 */
+  --weather-temp-bar-bg: #e5e7eb;     /* gray-200 */
+  --weather-temp-bar-from: #60a5fa;   /* blue-400 */
+  --weather-temp-bar-to: #fb923c;     /* orange-400 */
+  --weather-hover: #f3f4f6;           /* gray-100 */
+  --weather-hover-accent: rgba(239, 246, 255, 0.5); /* blue-50/50% */
+  --weather-border-accent: #93c5fd;   /* blue-300 */
 }
 
 .dark {
@@ -114,6 +162,30 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* 날씨 앱 전용 변수 — 다크 모드 */
+  --weather-gradient-from: #0f172a;   /* slate-900 */
+  --weather-gradient-to: #1e1b4b;     /* indigo-950 */
+  --weather-glass: rgba(30, 30, 30, 0.8);
+  --weather-glass-solid: #262626;
+  --weather-text-primary: #f3f4f6;    /* gray-100 */
+  --weather-text-secondary: #d1d5db;  /* gray-300 */
+  --weather-text-tertiary: #9ca3af;   /* gray-400 */
+  --weather-text-muted: #6b7280;      /* gray-500 */
+  --weather-text-placeholder: #4b5563; /* gray-600 */
+  --weather-accent-blue: #60a5fa;     /* blue-400 */
+  --weather-accent-orange: #fb923c;   /* orange-400 */
+  --weather-error-bg: rgba(127, 29, 29, 0.3);
+  --weather-error-border: rgba(185, 28, 28, 0.5);
+  --weather-error-text: #fca5a5;      /* red-300 */
+  --weather-error-text-sub: #f87171;  /* red-400 */
+  --weather-error-icon: #ef4444;      /* red-500 */
+  --weather-temp-bar-bg: #374151;     /* gray-700 */
+  --weather-temp-bar-from: #3b82f6;   /* blue-500 */
+  --weather-temp-bar-to: #f97316;     /* orange-500 */
+  --weather-hover: #374151;           /* gray-700 */
+  --weather-hover-accent: rgba(30, 58, 138, 0.3); /* blue-900/30% */
+  --weather-border-accent: #3b82f6;   /* blue-500 */
 }
 
 @layer base {
@@ -122,6 +194,24 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+
+  /* 테마 전환 시에만 트랜지션 적용 (토글 클릭 시 html에 class 추가/제거) */
+  html.theme-transitioning *,
+  html.theme-transitioning *::before,
+  html.theme-transitioning *::after {
+    transition: color 200ms ease-in-out, background-color 200ms ease-in-out,
+                border-color 200ms ease-in-out, box-shadow 200ms ease-in-out !important;
+  }
+
+  /* 접근성: prefers-reduced-motion 존중 */
+  @media (prefers-reduced-motion: reduce) {
+    html.theme-transitioning *,
+    html.theme-transitioning *::before,
+    html.theme-transitioning *::after {
+      transition-duration: 0ms !important;
+    }
   }
 }
 

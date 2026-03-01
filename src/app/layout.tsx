@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
-import { QueryProvider } from '@/app/providers';
+import { QueryProvider, ThemeProvider } from '@/app/providers';
 import { Toaster } from '@/shared/ui/sonner';
 import { RegisterServiceWorker } from '@/shared/lib';
 import './globals.css';
@@ -35,7 +35,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#ffffff',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#262626' },
+  ],
 };
 
 export default function RootLayout({
@@ -44,13 +47,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <QueryProvider>
-          {children}
-          <Toaster position="top-center" />
-          <RegisterServiceWorker />
-        </QueryProvider>
+        <ThemeProvider>
+          <QueryProvider>
+            {children}
+            <Toaster position="top-center" />
+            <RegisterServiceWorker />
+          </QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

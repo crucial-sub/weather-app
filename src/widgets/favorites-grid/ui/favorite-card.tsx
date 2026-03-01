@@ -58,7 +58,7 @@ export function FavoriteCard({ favorite }: FavoriteCardProps) {
       whileHover={{ scale: 1.02 }}
       transition={{ type: 'spring', stiffness: 300 }}
     >
-      <Card className="p-4 bg-white/80 backdrop-blur-sm relative min-h-[100px] lg:hover:shadow-md lg:transition-shadow lg:duration-200">
+      <Card className="p-4 bg-weather-glass backdrop-blur-sm relative min-h-[100px] lg:hover:shadow-md lg:transition-shadow lg:duration-200">
         {/* 더보기 메뉴 */}
         <div className="absolute top-1 right-1">
           <DropdownMenu>
@@ -108,7 +108,7 @@ export function FavoriteCard({ favorite }: FavoriteCardProps) {
               </Button>
             </div>
           ) : (
-            <p className="text-sm font-medium text-gray-700 truncate mb-2 pr-6">
+            <p className="text-sm font-medium text-weather-text-secondary truncate mb-2 pr-6">
               {displayName}
             </p>
           )}
@@ -131,14 +131,14 @@ export function FavoriteCard({ favorite }: FavoriteCardProps) {
                 <p className="text-2xl font-light">
                   {formatTemperature(weather.temperature)}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-weather-text-muted">
                   {formatTemperature(weather.tempMin)} / {formatTemperature(weather.tempMax)}
                 </p>
               </div>
             </div>
           ) : (
             <div className="h-[48px] flex items-center">
-              <p className="text-xs text-gray-400">날씨 정보 없음</p>
+              <p className="text-xs text-weather-text-placeholder">날씨 정보 없음</p>
             </div>
           )}
         </Link>

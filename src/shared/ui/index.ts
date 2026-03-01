@@ -32,3 +32,4 @@ export {
   DropdownMenuTrigger,
 } from './dropdown-menu'
 export { Toaster } from './sonner'
+export { ThemeToggle } from './theme-toggle'

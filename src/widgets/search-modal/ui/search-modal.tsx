@@ -98,7 +98,7 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
         <div className="space-y-4">
           {/* 검색 입력 */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-weather-text-placeholder" />
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -107,7 +107,7 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
               autoFocus
             />
             {isSearching && (
-              <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-gray-400" />
+              <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-weather-text-placeholder" />
             )}
           </div>
 
@@ -124,16 +124,16 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
                     transition={{ delay: index * 0.03 }}
                   >
                     <div
-                      className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors text-left cursor-pointer touch-manipulation"
+                      className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-weather-hover active:bg-gray-200 transition-colors text-left cursor-pointer touch-manipulation"
                       onClick={() => !isLoading && handleSelectDistrict(district)}
                     >
                       <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-gray-400" />
+                        <MapPin className="h-4 w-4 text-weather-text-placeholder" />
                         <div>
                           <p className="text-sm font-medium">
                             {getDisplayName(district)}
                           </p>
-                          <p className="text-xs text-gray-400">
+                          <p className="text-xs text-weather-text-placeholder">
                             {district.fullName.replace(/-/g, ' ')}
                           </p>
                         </div>
@@ -153,11 +153,11 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
                   </motion.div>
                 ))
               ) : query && !isSearching ? (
-                <p className="text-center text-sm text-gray-400 py-8">
+                <p className="text-center text-sm text-weather-text-placeholder py-8">
                   검색 결과가 없습니다.
                 </p>
               ) : !query ? (
-                <p className="text-center text-sm text-gray-400 py-8">
+                <p className="text-center text-sm text-weather-text-placeholder py-8">
                   검색어를 입력해주세요.
                 </p>
               ) : null}

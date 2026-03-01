@@ -18,7 +18,7 @@ interface HourlyForecastProps {
 // 정적 스켈레톤 JSX를 컴포넌트 외부로 호이스팅하여 매 렌더링마다 재생성 방지
 const hourlyForecastSkeleton = (
   <Card className="p-4">
-    <h3 className="text-sm font-medium text-gray-600 mb-3">시간대별 예보</h3>
+    <h3 className="text-sm font-medium text-weather-text-tertiary mb-3">시간대별 예보</h3>
     <div className="flex gap-4">
       {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} className="flex flex-col items-center gap-2">
@@ -41,8 +41,8 @@ export const HourlyForecast = memo(function HourlyForecast({ forecast, isLoading
   }
 
   return (
-    <Card className="p-4 lg:p-6 bg-white/80 backdrop-blur-sm">
-      <h3 className="text-sm font-medium text-gray-600 mb-3">시간대별 예보</h3>
+    <Card className="p-4 lg:p-6 bg-weather-glass backdrop-blur-sm">
+      <h3 className="text-sm font-medium text-weather-text-tertiary mb-3">시간대별 예보</h3>
       <ScrollArea className="w-full whitespace-nowrap">
         <div className="flex gap-4 lg:gap-6 pb-3">
           {forecast.map((hour, index) => (
@@ -53,7 +53,7 @@ export const HourlyForecast = memo(function HourlyForecast({ forecast, isLoading
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <span className="text-xs text-gray-500">{formatHour(hour.time)}</span>
+              <span className="text-xs text-weather-text-muted">{formatHour(hour.time)}</span>
               <Image
                 src={getWeatherIconUrl(hour.icon)}
                 alt="날씨"

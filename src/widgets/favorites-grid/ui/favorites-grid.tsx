@@ -21,7 +21,7 @@ export const FavoritesGrid = memo(function FavoritesGrid({ onAddClick }: Favorit
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-medium text-gray-600">⭐ 즐겨찾기</h3>
+      <h3 className="text-sm font-medium text-weather-text-tertiary">⭐ 즐겨찾기</h3>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
         <AnimatePresence mode="popLayout">
@@ -38,10 +38,10 @@ export const FavoritesGrid = memo(function FavoritesGrid({ onAddClick }: Favorit
             whileHover={{ scale: 1.02 }}
           >
             <Card
-              className="p-4 h-full min-h-[100px] flex items-center justify-center cursor-pointer border-dashed border-2 hover:border-blue-300 hover:bg-blue-50/50 transition-colors"
+              className="p-4 h-full min-h-[100px] flex items-center justify-center cursor-pointer border-dashed border-2 hover:border-weather-border-accent hover:bg-weather-hover-accent transition-colors"
               onClick={onAddClick}
             >
-              <div className="text-center text-gray-400">
+              <div className="text-center text-weather-text-placeholder">
                 <Plus className="h-6 w-6 mx-auto mb-1" />
                 <span className="text-xs">추가</span>
               </div>
@@ -50,7 +50,7 @@ export const FavoritesGrid = memo(function FavoritesGrid({ onAddClick }: Favorit
         )}
       </div>
 
-      <p className="text-xs text-gray-400 text-right">
+      <p className="text-xs text-weather-text-placeholder text-right">
         {favorites.length}/6
       </p>
     </div>
