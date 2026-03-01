@@ -10,6 +10,7 @@ import { useCurrentWeather, useHourlyForecast, useDailyForecast } from '@/entiti
 import { WeatherCard } from '@/widgets/weather-card';
 import { HourlyForecast } from '@/widgets/hourly-forecast';
 import { WeeklyForecast } from '@/widgets/weekly-forecast';
+import { ThemeToggle } from '@/shared/ui';
 
 export default function LocationDetailPage() {
   const params = useParams();
@@ -47,13 +48,16 @@ export default function LocationDetailPage() {
   // 즐겨찾기를 찾지 못한 경우
   if (!favorite) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
-          <div className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 py-3 flex items-center gap-3 responsive-transition">
-            <Button variant="ghost" size="icon" onClick={() => router.back()}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <h1 className="font-semibold text-gray-800">위치를 찾을 수 없음</h1>
+      <div className="min-h-screen bg-gradient-to-br from-weather-gradient-from to-weather-gradient-to">
+        <header className="sticky top-0 z-50 bg-weather-glass backdrop-blur-md border-b">
+          <div className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 py-3 flex items-center justify-between responsive-transition">
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <h1 className="font-semibold text-weather-text-primary">위치를 찾을 수 없음</h1>
+            </div>
+            <ThemeToggle />
           </div>
         </header>
 
@@ -61,13 +65,13 @@ export default function LocationDetailPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl p-8 text-center shadow-sm"
+            className="bg-weather-glass-solid rounded-xl p-8 text-center shadow-sm"
           >
-            <AlertCircle className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            <AlertCircle className="h-16 w-16 text-weather-text-placeholder mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-weather-text-primary mb-2">
               위치를 찾을 수 없습니다
             </h2>
-            <p className="text-gray-500 mb-6">
+            <p className="text-weather-text-muted mb-6">
               해당 즐겨찾기가 삭제되었거나 존재하지 않습니다.
             </p>
             <Button onClick={() => router.push('/')} className="w-full">
@@ -82,9 +86,9 @@ export default function LocationDetailPage() {
   const displayName = favorite.alias || favorite.name;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-weather-gradient-from to-weather-gradient-to">
       {/* 헤더 */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
+      <header className="sticky top-0 z-50 bg-weather-glass backdrop-blur-md border-b">
         <div className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 py-3 flex items-center justify-between responsive-transition">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => router.back()}>
@@ -92,9 +96,10 @@ export default function LocationDetailPage() {
             </Button>
             <div className="flex items-center gap-2">
               <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-              <h1 className="font-semibold text-gray-800">{displayName}</h1>
+              <h1 className="font-semibold text-weather-text-primary">{displayName}</h1>
             </div>
           </div>
+          <ThemeToggle />
         </div>
       </header>
 
@@ -107,8 +112,8 @@ export default function LocationDetailPage() {
             animate={{ opacity: 1 }}
             className="flex flex-col items-center justify-center py-20"
           >
-            <Loader2 className="h-12 w-12 animate-spin text-blue-500 mb-4" />
-            <p className="text-gray-500">날씨 정보를 불러오는 중...</p>
+            <Loader2 className="h-12 w-12 animate-spin text-weather-accent-blue mb-4" />
+            <p className="text-weather-text-muted">날씨 정보를 불러오는 중...</p>
           </motion.div>
         ) : null}
 
@@ -117,14 +122,14 @@ export default function LocationDetailPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-red-50 border border-red-200 rounded-xl p-6 text-center"
+            className="bg-weather-error-bg border border-weather-error-border rounded-xl p-6 text-center"
           >
-            <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-            <h2 className="text-lg font-semibold text-red-800 mb-2">
-              날씨 정보를 불러올 수 없습니다
+            <AlertCircle className="h-12 w-12 text-weather-error-icon mx-auto mb-4" />
+            <h2 className="text-lg font-semibold text-weather-error-text mb-2">
+              해당 장소의 정보가 제공되지 않습니다.
             </h2>
-            <p className="text-red-600 text-sm mb-4">
-              잠시 후 다시 시도해주세요.
+            <p className="text-weather-error-text-sub text-sm mb-4">
+              다른 장소를 검색해보세요.
             </p>
             <Button onClick={() => router.back()} variant="outline">
               뒤로 가기

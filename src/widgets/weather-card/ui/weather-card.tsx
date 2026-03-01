@@ -15,6 +15,8 @@ interface WeatherCardProps {
   locationName: string;
   isLoading: boolean;
   error?: string | null;
+  todayTempMin?: number;  // dailyForecast 기반 오늘 최저 온도
+  todayTempMax?: number;  // dailyForecast 기반 오늘 최고 온도
 }
 
 // 정적 스켈레톤 JSX를 컴포넌트 외부로 호이스팅하여 매 렌더링마다 재생성 방지
@@ -27,11 +29,11 @@ const weatherCardSkeleton = (
   </Card>
 );
 
-export const WeatherCard = memo(function WeatherCard({ weather, locationName, isLoading, error }: WeatherCardProps) {
+export const WeatherCard = memo(function WeatherCard({ weather, locationName, isLoading, error, todayTempMin, todayTempMax }: WeatherCardProps) {
   if (error) {
     return (
       <Card className="p-6 text-center">
-        <p className="text-red-500">{error}</p>
+        <p className="text-destructive">{error}</p>
       </Card>
     );
   }
@@ -46,8 +48,8 @@ export const WeatherCard = memo(function WeatherCard({ weather, locationName, is
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="p-6 lg:p-8 text-center bg-white/80 backdrop-blur-sm">
-        <p className="text-gray-600 text-sm mb-2">📍 {locationName}</p>
+      <Card className="p-6 lg:p-8 text-center bg-weather-glass backdrop-blur-sm">
+        <p className="text-weather-text-tertiary text-sm mb-2">📍 {locationName}</p>
 
         <motion.div
           initial={{ scale: 0.8 }}
@@ -64,7 +66,7 @@ export const WeatherCard = memo(function WeatherCard({ weather, locationName, is
         </motion.div>
 
         <motion.p
-          className="text-6xl lg:text-7xl font-light text-gray-800"
+          className="text-6xl lg:text-7xl font-light text-weather-text-primary"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -72,29 +74,37 @@ export const WeatherCard = memo(function WeatherCard({ weather, locationName, is
           {formatTemperature(weather.temperature)}
         </motion.p>
 
-        <p className="text-gray-500 mt-2">{weather.description}</p>
+        <p className="text-weather-text-muted mt-2">{weather.description}</p>
 
-        <div className="flex justify-center gap-4 mt-4 text-sm text-gray-600">
-          <span>최고 {formatTemperature(weather.tempMax)}</span>
+        <div className="flex justify-center gap-4 mt-4 text-sm text-weather-text-tertiary">
+          <span>최고 {formatTemperature(
+            todayTempMax !== undefined
+              ? Math.max(weather.temperature, todayTempMax)
+              : weather.tempMax
+          )}</span>
           <span>|</span>
-          <span>최저 {formatTemperature(weather.tempMin)}</span>
+          <span>최저 {formatTemperature(
+            todayTempMin !== undefined
+              ? Math.min(weather.temperature, todayTempMin)
+              : weather.tempMin
+          )}</span>
         </div>
 
         {/* 데스크탑 전용 상세 정보 */}
-        <div className="hidden lg:grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
+        <div className="hidden lg:grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-border">
           <div className="flex flex-col items-center gap-1">
-            <Thermometer className="h-5 w-5 text-gray-400" />
-            <span className="text-xs text-gray-500">체감온도</span>
+            <Thermometer className="h-5 w-5 text-weather-text-placeholder" />
+            <span className="text-xs text-weather-text-muted">체감온도</span>
             <span className="text-sm font-medium">{formatTemperature(weather.feelsLike)}</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <Droplets className="h-5 w-5 text-gray-400" />
-            <span className="text-xs text-gray-500">습도</span>
+            <Droplets className="h-5 w-5 text-weather-text-placeholder" />
+            <span className="text-xs text-weather-text-muted">습도</span>
             <span className="text-sm font-medium">{weather.humidity}%</span>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <Wind className="h-5 w-5 text-gray-400" />
-            <span className="text-xs text-gray-500">풍속</span>
+            <Wind className="h-5 w-5 text-weather-text-placeholder" />
+            <span className="text-xs text-weather-text-muted">풍속</span>
             <span className="text-sm font-medium">{weather.windSpeed}m/s</span>
           </div>
         </div>
