@@ -124,3 +124,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* 반응형 트랜지션 유틸리티 - 컨테이너 크기 변화에 부드러운 전환 적용 */
+.responsive-transition {
+  transition: max-width 300ms ease, padding 300ms ease, gap 300ms ease;
+}
+
+/* 모션 감소 선호 사용자는 트랜지션 비활성화 */
+@media (prefers-reduced-motion: reduce) {
+  .responsive-transition {
+    transition: none;
+  }
+}

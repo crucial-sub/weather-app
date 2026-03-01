@@ -41,7 +41,7 @@ export function FavoriteCard({ favorite }: FavoriteCardProps) {
       whileHover={{ scale: 1.02 }}
       transition={{ type: 'spring', stiffness: 300 }}
     >
-      <Card className="p-4 bg-white/80 backdrop-blur-sm relative group">
+      <Card className="p-4 bg-white/80 backdrop-blur-sm relative group lg:hover:shadow-md lg:transition-shadow lg:duration-200">
         {/* 삭제 버튼 */}
         <Button
           variant="ghost"

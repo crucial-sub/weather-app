@@ -82,7 +82,7 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md lg:max-w-lg">
         <DialogHeader>
           <DialogTitle>장소 검색</DialogTitle>
         </DialogHeader>
@@ -104,7 +104,7 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
           </div>
 
           {/* 검색 결과 */}
-          <div className="max-h-[300px] overflow-y-auto space-y-1">
+          <div className="max-h-[300px] lg:max-h-[400px] overflow-y-auto space-y-1">
             <AnimatePresence>
               {results.length > 0 ? (
                 results.map((district, index) => (
