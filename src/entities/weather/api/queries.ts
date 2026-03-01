@@ -6,6 +6,7 @@ import {
   type CurrentWeatherResponse,
   type ForecastResponse
 } from '@/shared/api';
+import { getWeatherDescription } from '@/shared/lib/weather-description';
 import type { Weather, HourlyForecast, DailyForecast } from '../model/types';
 
 // 쿼리 키
@@ -17,6 +18,7 @@ export const weatherKeys = {
 
 // 응답 변환 함수
 function transformCurrentWeather(data: CurrentWeatherResponse): Weather {
+  const weatherId = data.weather[0].id;
   return {
     temperature: data.main.temp,
     feelsLike: data.main.feels_like,
@@ -24,8 +26,9 @@ function transformCurrentWeather(data: CurrentWeatherResponse): Weather {
     tempMax: data.main.temp_max,
     humidity: data.main.humidity,
     windSpeed: data.wind.speed,
+    weatherId,
     condition: data.weather[0].main,
-    description: data.weather[0].description,
+    description: getWeatherDescription(weatherId),
     icon: data.weather[0].icon,
   };
 }
@@ -40,7 +43,7 @@ function transformHourlyForecast(data: ForecastResponse): HourlyForecast[] {
 
 function transformDailyForecast(data: ForecastResponse): DailyForecast[] {
   // 일별로 그룹화하여 최저/최고 온도 계산
-  const dailyMap = new Map<string, { temps: number[]; icons: string[]; condition: string; date: number }>();
+  const dailyMap = new Map<string, { temps: number[]; icons: string[]; weatherId: number; date: number }>();
 
   data.list.forEach((item) => {
     const date = new Date(item.dt * 1000).toDateString();
@@ -53,7 +56,7 @@ function transformDailyForecast(data: ForecastResponse): DailyForecast[] {
       dailyMap.set(date, {
         temps: [item.main.temp],
         icons: [item.weather[0].icon],
-        condition: item.weather[0].main,
+        weatherId: item.weather[0].id,
         date: item.dt,
       });
     }
@@ -66,7 +69,8 @@ function transformDailyForecast(data: ForecastResponse): DailyForecast[] {
       tempMin: Math.min(...day.temps),
       tempMax: Math.max(...day.temps),
       icon: day.icons[Math.floor(day.icons.length / 2)], // 중간 시간대 아이콘
-      condition: day.condition,
+      weatherId: day.weatherId,
+      condition: getWeatherDescription(day.weatherId),
     }));
 }
 

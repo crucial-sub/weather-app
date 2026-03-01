@@ -7,6 +7,7 @@ export interface Weather {
   tempMax: number;
   humidity: number;
   windSpeed: number;
+  weatherId: number;
   condition: string;
   description: string;
   icon: string;
@@ -22,6 +23,7 @@ export interface DailyForecast {
   date: number;
   tempMin: number;
   tempMax: number;
+  weatherId: number;
   icon: string;
   condition: string;
 }
