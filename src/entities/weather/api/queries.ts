@@ -1,8 +1,10 @@
 // 날씨 TanStack Query 훅
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   fetchCurrentWeather,
   fetchForecast,
+  fetchOpenMeteoDaily,
   type CurrentWeatherResponse,
   type ForecastResponse
 } from '@/shared/api';
@@ -115,20 +117,60 @@ export function useHourlyForecast(
   });
 }
 
-// 5일 예보 쿼리 훅
+// Open-Meteo 일별 온도 쿼리 (내부 사용)
+function useOpenMeteoDaily(lat: number, lon: number, enabled: boolean) {
+  return useQuery({
+    queryKey: ['weather', 'open-meteo-daily', lat, lon],
+    queryFn: () => fetchOpenMeteoDaily(lat, lon),
+    enabled: enabled && lat !== 0 && lon !== 0,
+    staleTime: 30 * 60 * 1000,  // 30분 (일별 데이터는 변동 적음)
+    gcTime: 60 * 60 * 1000,     // 1시간
+  });
+}
+
+// 5일 예보 쿼리 훅 — Open-Meteo 일별 min/max와 OWM 아이콘/날씨를 병합
 export function useDailyForecast(
   lat: number,
   lon: number,
   options: QueryOptions = {}
 ) {
   const { enabled = true } = options;
+  const isEnabled = enabled && lat !== 0 && lon !== 0;
 
-  return useQuery({
+  // OpenWeatherMap — 아이콘, 날씨 설명, 날짜
+  const owmQuery = useQuery({
     queryKey: weatherKeys.forecast(lat, lon),
     queryFn: () => fetchForecast(lat, lon),
     select: transformDailyForecast,
-    enabled: enabled && lat !== 0 && lon !== 0,
+    enabled: isEnabled,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
   });
+
+  // Open-Meteo — 정확한 일별 최저/최고 온도
+  const meteoQuery = useOpenMeteoDaily(lat, lon, isEnabled);
+
+  // 병합: OWM 아이콘/날씨 + Open-Meteo min/max
+  const data = useMemo(() => {
+    if (!owmQuery.data) return undefined;
+    if (!meteoQuery.data) return owmQuery.data; // Open-Meteo 실패 시 OWM fallback
+
+    const meteoDaily = meteoQuery.data.daily;
+    return owmQuery.data.map((day) => {
+      const dayDate = new Date(day.date * 1000).toISOString().slice(0, 10); // "YYYY-MM-DD"
+      const meteoIdx = meteoDaily.time.indexOf(dayDate);
+      if (meteoIdx === -1) return day;
+      return {
+        ...day,
+        tempMin: meteoDaily.temperature_2m_min[meteoIdx],
+        tempMax: meteoDaily.temperature_2m_max[meteoIdx],
+      };
+    });
+  }, [owmQuery.data, meteoQuery.data]);
+
+  return {
+    data,
+    isLoading: owmQuery.isLoading,
+    error: owmQuery.error,
+  };
 }

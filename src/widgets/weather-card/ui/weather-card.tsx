@@ -78,15 +78,11 @@ export const WeatherCard = memo(function WeatherCard({ weather, locationName, is
 
         <div className="flex justify-center gap-4 mt-4 text-sm text-weather-text-tertiary">
           <span>최고 {formatTemperature(
-            todayTempMax !== undefined
-              ? Math.max(weather.temperature, todayTempMax)
-              : weather.tempMax
+            todayTempMax !== undefined ? todayTempMax : weather.tempMax
           )}</span>
           <span>|</span>
           <span>최저 {formatTemperature(
-            todayTempMin !== undefined
-              ? Math.min(weather.temperature, todayTempMin)
-              : weather.tempMin
+            todayTempMin !== undefined ? todayTempMin : weather.tempMin
           )}</span>
         </div>
 

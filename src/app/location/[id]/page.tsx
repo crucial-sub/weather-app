@@ -151,6 +151,8 @@ export default function LocationDetailPage() {
                   weather={currentWeather}
                   locationName={displayName}
                   isLoading={isWeatherLoading}
+                  todayTempMin={dailyForecast?.[0]?.tempMin}
+                  todayTempMax={dailyForecast?.[0]?.tempMax}
                 />
               </motion.div>
 
