@@ -2,7 +2,7 @@
 
 // 장소 검색 모달 위젯
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+
 import { Search, MapPin, Star, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -111,57 +111,48 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
             )}
           </div>
 
-          {/* 검색 결과 */}
-          <div className="max-h-[300px] lg:max-h-[400px] overflow-y-auto space-y-1">
-            <AnimatePresence>
-              {results.length > 0 ? (
-                results.map((district, index) => (
-                  <motion.div
-                    key={district.fullName}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ delay: index * 0.03 }}
-                  >
-                    <div
-                      className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-weather-hover active:bg-gray-200 transition-colors text-left cursor-pointer touch-manipulation"
-                      onClick={() => !isLoading && handleSelectDistrict(district)}
-                    >
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-weather-text-placeholder" />
-                        <div>
-                          <p className="text-sm font-medium">
-                            {getDisplayName(district)}
-                          </p>
-                          <p className="text-xs text-weather-text-placeholder">
-                            {district.fullName.replace(/-/g, ' ')}
-                          </p>
-                        </div>
-                      </div>
-
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={(e) => handleToggleFavorite(district, e)}
-                        disabled={isLoading}
-                        aria-label={isFavoriteByFullName(district.fullName) ? '즐겨찾기 제거' : '즐겨찾기 추가'}
-                      >
-                        <Star className={`h-4 w-4 ${isFavoriteByFullName(district.fullName) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
-                      </Button>
+          {/* 검색 결과 - 높이 고정으로 모달 흔들림 방지 */}
+          <div className="h-[300px] lg:h-[400px] overflow-y-auto space-y-1">
+            {results.length > 0 ? (
+              results.map((district) => (
+                <div
+                  key={district.fullName}
+                  className="w-full flex items-center justify-between p-3 rounded-lg border-l-2 border-l-transparent hover:border-l-weather-border-accent hover:bg-weather-hover active:bg-gray-200 transition-colors text-left cursor-pointer touch-manipulation"
+                  onClick={() => !isLoading && handleSelectDistrict(district)}
+                >
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-weather-text-placeholder" />
+                    <div>
+                      <p className="text-sm font-medium">
+                        {getDisplayName(district)}
+                      </p>
+                      <p className="text-xs text-weather-text-placeholder">
+                        {district.fullName.replace(/-/g, ' ')}
+                      </p>
                     </div>
-                  </motion.div>
-                ))
-              ) : query && !isSearching ? (
-                <p className="text-center text-sm text-weather-text-placeholder py-8">
-                  검색 결과가 없습니다.
-                </p>
-              ) : !query ? (
-                <p className="text-center text-sm text-weather-text-placeholder py-8">
-                  검색어를 입력해주세요.
-                </p>
-              ) : null}
-            </AnimatePresence>
+                  </div>
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={(e) => handleToggleFavorite(district, e)}
+                    disabled={isLoading}
+                    aria-label={isFavoriteByFullName(district.fullName) ? '즐겨찾기 제거' : '즐겨찾기 추가'}
+                  >
+                    <Star className={`h-4 w-4 ${isFavoriteByFullName(district.fullName) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
+                  </Button>
+                </div>
+              ))
+            ) : query && !isSearching ? (
+              <p className="text-center text-sm text-weather-text-placeholder py-8">
+                검색 결과가 없습니다.
+              </p>
+            ) : !query ? (
+              <p className="text-center text-sm text-weather-text-placeholder py-8">
+                검색어를 입력해주세요.
+              </p>
+            ) : null}
           </div>
         </div>
       </DialogContent>

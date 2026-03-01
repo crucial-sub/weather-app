@@ -2,7 +2,7 @@
 
 // 즐겨찾기 카드 컴포넌트
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { EllipsisVertical, Pencil, Trash2, Check } from 'lucide-react';
@@ -51,14 +51,7 @@ export function FavoriteCard({ favorite }: FavoriteCardProps) {
   const displayName = favorite.alias || favorite.name;
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: 'spring', stiffness: 300 }}
-    >
+    <div>
       <Card className="p-4 bg-weather-glass backdrop-blur-sm relative min-h-[100px] lg:hover:shadow-md lg:transition-shadow lg:duration-200">
         {/* 더보기 메뉴 */}
         <div className="absolute top-1 right-1">
@@ -147,6 +140,6 @@ export function FavoriteCard({ favorite }: FavoriteCardProps) {
           )}
         </Link>
       </Card>
-    </motion.div>
+    </div>
   );
 }
