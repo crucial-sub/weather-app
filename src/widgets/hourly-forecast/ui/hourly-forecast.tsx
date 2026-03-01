@@ -37,14 +37,14 @@ export function HourlyForecast({ forecast, isLoading }: HourlyForecastProps) {
   }
 
   return (
-    <Card className="p-4 bg-white/80 backdrop-blur-sm">
+    <Card className="p-4 lg:p-6 bg-white/80 backdrop-blur-sm">
       <h3 className="text-sm font-medium text-gray-600 mb-3">시간대별 예보</h3>
       <ScrollArea className="w-full whitespace-nowrap">
-        <div className="flex gap-4 pb-3">
+        <div className="flex gap-4 lg:gap-6 pb-3">
           {forecast.map((hour, index) => (
             <motion.div
               key={hour.time}
-              className="flex flex-col items-center gap-1 min-w-[60px]"
+              className="flex flex-col items-center gap-1 min-w-[60px] lg:min-w-[72px]"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
@@ -55,6 +55,7 @@ export function HourlyForecast({ forecast, isLoading }: HourlyForecastProps) {
                 alt="날씨"
                 width={40}
                 height={40}
+                className="lg:w-12 lg:h-12"
               />
               <span className="text-sm font-medium">
                 {formatTemperature(hour.temperature)}

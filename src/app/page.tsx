@@ -2,7 +2,7 @@
 
 // 메인 페이지 - 현재 위치 날씨 및 즐겨찾기 표시
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, LayoutGroup } from 'framer-motion';
 import { MapPin, Search, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { useGeolocation } from '@/features/geolocation';
@@ -99,7 +99,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* 헤더 */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 py-3 flex items-center justify-between responsive-transition">
           <div className="flex items-center gap-2">
             <MapPin className="h-5 w-5 text-blue-500" />
             <h1 className="font-semibold text-gray-800">
@@ -138,7 +138,7 @@ export default function HomePage() {
       </header>
 
       {/* 메인 컨텐츠 */}
-      <main className="max-w-lg mx-auto px-4 py-6 space-y-6">
+      <main className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 py-6 space-y-6 responsive-transition">
         {/* 로딩 상태 */}
         {isLoading && !currentWeather && (
           <motion.div
@@ -175,33 +175,40 @@ export default function HomePage() {
 
         {/* 날씨 정보 */}
         {currentWeather && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="space-y-6"
-          >
-            {/* 현재 날씨 카드 */}
-            <WeatherCard
-              weather={currentWeather}
-              locationName={displayLocation?.name || ''}
-              isLoading={isWeatherLoading}
-            />
+          <LayoutGroup>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-6 lg:grid lg:grid-cols-12 lg:gap-6 lg:space-y-0"
+            >
+              {/* 좌측 패널 - 현재 날씨 카드 */}
+              <motion.div layout className="lg:col-span-4 lg:sticky lg:top-20 lg:self-start">
+                <WeatherCard
+                  weather={currentWeather}
+                  locationName={displayLocation?.name || ''}
+                  isLoading={isWeatherLoading}
+                />
+              </motion.div>
 
-            {/* 시간대별 예보 */}
-            <HourlyForecast
-              forecast={hourlyForecast || []}
-              isLoading={isHourlyLoading}
-            />
+              {/* 우측 패널 - 예보 + 즐겨찾기 */}
+              <motion.div layout className="lg:col-span-8 space-y-6">
+                {/* 시간대별 예보 */}
+                <HourlyForecast
+                  forecast={hourlyForecast || []}
+                  isLoading={isHourlyLoading}
+                />
 
-            {/* 주간 예보 */}
-            <WeeklyForecast
-              forecast={dailyForecast || []}
-              isLoading={isDailyLoading}
-            />
+                {/* 주간 예보 */}
+                <WeeklyForecast
+                  forecast={dailyForecast || []}
+                  isLoading={isDailyLoading}
+                />
 
-            {/* 즐겨찾기 그리드 */}
-            <FavoritesGrid onAddClick={() => setIsSearchOpen(true)} />
-          </motion.div>
+                {/* 즐겨찾기 그리드 */}
+                <FavoritesGrid onAddClick={() => setIsSearchOpen(true)} />
+              </motion.div>
+            </motion.div>
+          </LayoutGroup>
         )}
 
         {/* 위치 권한 요청 안내 (위치 정보 없을 때) */}

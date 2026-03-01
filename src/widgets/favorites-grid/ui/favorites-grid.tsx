@@ -22,7 +22,7 @@ export function FavoritesGrid({ onAddClick }: FavoritesGridProps) {
     <div className="space-y-3">
       <h3 className="text-sm font-medium text-gray-600">⭐ 즐겨찾기</h3>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
         <AnimatePresence mode="popLayout">
           {favorites.map((favorite) => (
             <FavoriteCard key={favorite.id} favorite={favorite} />

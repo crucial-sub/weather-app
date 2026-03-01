@@ -41,9 +41,9 @@ export function WeeklyForecast({ forecast, isLoading }: WeeklyForecastProps) {
   const tempRange = maxTemp - minTemp || 1;
 
   return (
-    <Card className="p-4 bg-white/80 backdrop-blur-sm">
+    <Card className="p-4 lg:p-6 bg-white/80 backdrop-blur-sm">
       <h3 className="text-sm font-medium text-gray-600 mb-3">5일 예보</h3>
-      <div className="space-y-3">
+      <div className="space-y-3 lg:space-y-4">
         {forecast.map((day, index) => {
           const leftPercent = ((day.tempMin - minTemp) / tempRange) * 100;
           const rawWidth = ((day.tempMax - day.tempMin) / tempRange) * 100;
@@ -53,12 +53,12 @@ export function WeeklyForecast({ forecast, isLoading }: WeeklyForecastProps) {
           return (
             <motion.div
               key={day.date}
-              className="flex items-center gap-3"
+              className="flex items-center gap-3 lg:gap-4"
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <span className="text-sm text-gray-600 w-12">{formatDay(day.date)}</span>
+              <span className="text-sm text-gray-600 w-12 lg:w-16">{formatDay(day.date)}</span>
 
               <Image
                 src={getWeatherIconUrl(day.icon)}
@@ -67,17 +67,22 @@ export function WeeklyForecast({ forecast, isLoading }: WeeklyForecastProps) {
                 height={32}
               />
 
+              {/* 데스크탑 전용 날씨 설명 */}
+              <span className="hidden lg:inline text-sm text-gray-500 w-20 truncate">
+                {day.condition}
+              </span>
+
               <span className="text-sm text-blue-500 w-10 text-right">
                 {formatTemperature(day.tempMin)}
               </span>
 
               <div
-                className="flex-1 h-1 bg-gray-200 rounded-full relative overflow-hidden"
+                className="flex-1 h-1 lg:h-1.5 bg-gray-200 rounded-full relative overflow-hidden"
                 role="img"
                 aria-label={`최저 ${formatTemperature(day.tempMin)}, 최고 ${formatTemperature(day.tempMax)}`}
               >
                 <div
-                  className="absolute h-full bg-gradient-to-r from-blue-400 to-orange-400 rounded-full"
+                  className="absolute h-full bg-gradient-to-r from-blue-400 to-orange-400 rounded-full transition-all duration-300"
                   style={{
                     left: `${leftPercent}%`,
                     width: `${widthPercent}%`,

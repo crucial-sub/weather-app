@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Card } from '@/shared/ui/card';
 import { Skeleton } from '@/shared/ui/skeleton';
+import { Droplets, Wind, Thermometer } from 'lucide-react';
 import { formatTemperature, getWeatherIconUrl } from '@/shared/lib';
 import type { Weather } from '@/entities/weather';
 
@@ -41,7 +42,7 @@ export function WeatherCard({ weather, locationName, isLoading, error }: Weather
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="p-6 text-center bg-white/80 backdrop-blur-sm">
+      <Card className="p-6 lg:p-8 text-center bg-white/80 backdrop-blur-sm">
         <p className="text-gray-600 text-sm mb-2">📍 {locationName}</p>
 
         <motion.div
@@ -54,12 +55,12 @@ export function WeatherCard({ weather, locationName, isLoading, error }: Weather
             alt={weather.description}
             width={100}
             height={100}
-            className="mx-auto"
+            className="mx-auto lg:w-32 lg:h-32"
           />
         </motion.div>
 
         <motion.p
-          className="text-6xl font-light text-gray-800"
+          className="text-6xl lg:text-7xl font-light text-gray-800"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
@@ -73,6 +74,25 @@ export function WeatherCard({ weather, locationName, isLoading, error }: Weather
           <span>최고 {formatTemperature(weather.tempMax)}</span>
           <span>|</span>
           <span>최저 {formatTemperature(weather.tempMin)}</span>
+        </div>
+
+        {/* 데스크탑 전용 상세 정보 */}
+        <div className="hidden lg:grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-gray-200">
+          <div className="flex flex-col items-center gap-1">
+            <Thermometer className="h-5 w-5 text-gray-400" />
+            <span className="text-xs text-gray-500">체감온도</span>
+            <span className="text-sm font-medium">{formatTemperature(weather.feelsLike)}</span>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <Droplets className="h-5 w-5 text-gray-400" />
+            <span className="text-xs text-gray-500">습도</span>
+            <span className="text-sm font-medium">{weather.humidity}%</span>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <Wind className="h-5 w-5 text-gray-400" />
+            <span className="text-xs text-gray-500">풍속</span>
+            <span className="text-sm font-medium">{weather.windSpeed}m/s</span>
+          </div>
         </div>
       </Card>
     </motion.div>

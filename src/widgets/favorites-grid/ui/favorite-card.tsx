@@ -58,7 +58,7 @@ export function FavoriteCard({ favorite }: FavoriteCardProps) {
       whileHover={{ scale: 1.02 }}
       transition={{ type: 'spring', stiffness: 300 }}
     >
-      <Card className="p-4 bg-white/80 backdrop-blur-sm relative min-h-[100px]">
+      <Card className="p-4 bg-white/80 backdrop-blur-sm relative min-h-[100px] lg:hover:shadow-md lg:transition-shadow lg:duration-200">
         {/* 더보기 메뉴 */}
         <div className="absolute top-1 right-1">
           <DropdownMenu>
