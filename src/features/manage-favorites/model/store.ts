@@ -12,6 +12,8 @@ interface FavoritesState {
   removeFavorite: (id: string) => void;
   updateAlias: (id: string, alias: string) => void;
   isFavorite: (id: string) => boolean;
+  isFavoriteByFullName: (fullName: string) => boolean;
+  removeFavoriteByFullName: (fullName: string) => void;
   canAddMore: () => boolean;
   setCurrentLocation: (location: Location) => void;
 }
@@ -62,6 +64,18 @@ export const useFavoritesStore = create<FavoritesState>()(
 
       isFavorite: (id) => {
         return get().favorites.some((f) => f.id === id);
+      },
+
+      // fullName 기반 즐겨찾기 여부 확인
+      isFavoriteByFullName: (fullName) => {
+        return get().favorites.some((f) => f.fullName === fullName);
+      },
+
+      // fullName 기반 즐겨찾기 삭제
+      removeFavoriteByFullName: (fullName) => {
+        set((state) => ({
+          favorites: state.favorites.filter((f) => f.fullName !== fullName),
+        }));
       },
 
       canAddMore: () => {

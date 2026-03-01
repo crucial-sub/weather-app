@@ -27,7 +27,7 @@ interface SearchModalProps {
 export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { query, setQuery, results, getLocationWithCoords, isSearching } = useLocationSearch();
-  const { addFavorite, canAddMore } = useFavoritesStore();
+  const { addFavorite, canAddMore, isFavoriteByFullName, removeFavoriteByFullName } = useFavoritesStore();
 
   const handleSelectDistrict = async (district: District) => {
     setIsLoading(true);
@@ -50,8 +50,16 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
     }
   };
 
-  const handleAddToFavorites = async (district: District, e: React.MouseEvent) => {
+  // 즐겨찾기 토글 (추가/제거)
+  const handleToggleFavorite = async (district: District, e: React.MouseEvent) => {
     e.stopPropagation();
+
+    // 이미 즐겨찾기된 항목이면 제거
+    if (isFavoriteByFullName(district.fullName)) {
+      removeFavoriteByFullName(district.fullName);
+      toast.success('즐겨찾기에서 제거되었습니다.');
+      return;
+    }
 
     if (!canAddMore()) {
       toast.error('즐겨찾기는 최대 6개까지 가능합니다.');
@@ -116,7 +124,7 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
                     transition={{ delay: index * 0.03 }}
                   >
                     <div
-                      className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors text-left cursor-pointer"
+                      className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition-colors text-left cursor-pointer touch-manipulation"
                       onClick={() => !isLoading && handleSelectDistrict(district)}
                     >
                       <div className="flex items-center gap-2">
@@ -135,10 +143,11 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
                         variant="ghost"
                         size="icon"
                         className="h-8 w-8"
-                        onClick={(e) => handleAddToFavorites(district, e)}
+                        onClick={(e) => handleToggleFavorite(district, e)}
                         disabled={isLoading}
+                        aria-label={isFavoriteByFullName(district.fullName) ? '즐겨찾기 제거' : '즐겨찾기 추가'}
                       >
-                        <Star className="h-4 w-4" />
+                        <Star className={`h-4 w-4 ${isFavoriteByFullName(district.fullName) ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
                       </Button>
                     </div>
                   </motion.div>
