@@ -115,10 +115,9 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ delay: index * 0.03 }}
                   >
-                    <button
-                      className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors text-left"
-                      onClick={() => handleSelectDistrict(district)}
-                      disabled={isLoading}
+                    <div
+                      className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition-colors text-left cursor-pointer"
+                      onClick={() => !isLoading && handleSelectDistrict(district)}
                     >
                       <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-gray-400" />
@@ -141,7 +140,7 @@ export function SearchModal({ open, onOpenChange, onSelectLocation }: SearchModa
                       >
                         <Star className="h-4 w-4" />
                       </Button>
-                    </button>
+                    </div>
                   </motion.div>
                 ))
               ) : query && !isSearching ? (
