@@ -117,7 +117,7 @@ export function useHourlyForecast(
   });
 }
 
-// Open-Meteo 일별 온도 쿼리 (내부 사용)
+// Open-Meteo 일별 온도 쿼리
 function useOpenMeteoDaily(lat: number, lon: number, enabled: boolean) {
   return useQuery({
     queryKey: ['weather', 'open-meteo-daily', lat, lon],
@@ -151,8 +151,10 @@ export function useDailyForecast(
   const meteoQuery = useOpenMeteoDaily(lat, lon, isEnabled);
 
   // 병합: OWM 아이콘/날씨 + Open-Meteo min/max
+  // Open-Meteo 로딩 중이면 잘못된 OWM min/max 노출 방지를 위해 데이터 보류
   const data = useMemo(() => {
     if (!owmQuery.data) return undefined;
+    if (meteoQuery.isLoading) return undefined;
     if (!meteoQuery.data) return owmQuery.data; // Open-Meteo 실패 시 OWM fallback
 
     const meteoDaily = meteoQuery.data.daily;
@@ -166,11 +168,27 @@ export function useDailyForecast(
         tempMax: meteoDaily.temperature_2m_max[meteoIdx],
       };
     });
-  }, [owmQuery.data, meteoQuery.data]);
+  }, [owmQuery.data, meteoQuery.data, meteoQuery.isLoading]);
 
   return {
     data,
     isLoading: owmQuery.isLoading,
     error: owmQuery.error,
   };
+}
+
+// 오늘의 최저/최고 온도 훅 — 즐겨찾기 카드 등 간단한 min/max 표시용
+export function useTodayMinMax(lat: number, lon: number, enabled: boolean = true) {
+  const meteoQuery = useOpenMeteoDaily(lat, lon, enabled);
+
+  const today = useMemo(() => {
+    if (!meteoQuery.data) return undefined;
+    // Open-Meteo 일별 데이터의 첫 번째 항목이 오늘
+    return {
+      tempMin: meteoQuery.data.daily.temperature_2m_min[0],
+      tempMax: meteoQuery.data.daily.temperature_2m_max[0],
+    };
+  }, [meteoQuery.data]);
+
+  return { data: today, isLoading: meteoQuery.isLoading };
 }

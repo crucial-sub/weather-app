@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
 import { formatTemperature, getWeatherIconUrl } from '@/shared/lib/format';
-import { useCurrentWeather } from '@/entities/weather';
+import { useCurrentWeather, useTodayMinMax } from '@/entities/weather';
 import { useFavoritesStore } from '@/features/manage-favorites';
 import type { Favorite } from '@/entities/location';
 
@@ -30,6 +30,7 @@ export function FavoriteCard({ favorite }: FavoriteCardProps) {
   const [alias, setAlias] = useState(favorite.alias || '');
   const { removeFavorite, updateAlias } = useFavoritesStore();
   const { data: weather, isLoading } = useCurrentWeather(favorite.lat, favorite.lon);
+  const { data: todayTemp, isLoading: isTempLoading } = useTodayMinMax(favorite.lat, favorite.lon);
 
   // 별칭 저장 핸들러
   const handleSaveAlias = () => {
@@ -132,7 +133,10 @@ export function FavoriteCard({ favorite }: FavoriteCardProps) {
                   {formatTemperature(weather.temperature)}
                 </p>
                 <p className="text-xs text-weather-text-muted">
-                  {formatTemperature(weather.tempMin)} / {formatTemperature(weather.tempMax)}
+                  {isTempLoading ? '-- / --' : todayTemp
+                    ? `${formatTemperature(todayTemp.tempMin)} / ${formatTemperature(todayTemp.tempMax)}`
+                    : `${formatTemperature(weather.tempMin)} / ${formatTemperature(weather.tempMax)}`
+                  }
                 </p>
               </div>
             </div>
