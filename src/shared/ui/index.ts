@@ -24,4 +24,11 @@ export {
 export { Input } from './input'
 export { ScrollArea, ScrollBar } from './scroll-area'
 export { Skeleton } from './skeleton'
+export {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from './dropdown-menu'
 export { Toaster } from './sonner'

@@ -46,7 +46,9 @@ export function WeeklyForecast({ forecast, isLoading }: WeeklyForecastProps) {
       <div className="space-y-3">
         {forecast.map((day, index) => {
           const leftPercent = ((day.tempMin - minTemp) / tempRange) * 100;
-          const widthPercent = ((day.tempMax - day.tempMin) / tempRange) * 100;
+          const rawWidth = ((day.tempMax - day.tempMin) / tempRange) * 100;
+          // 최소 10% 너비 보장하되, 컨테이너를 넘지 않도록 clamp
+          const widthPercent = Math.min(Math.max(rawWidth, 10), 100 - leftPercent);
 
           return (
             <motion.div
@@ -69,12 +71,16 @@ export function WeeklyForecast({ forecast, isLoading }: WeeklyForecastProps) {
                 {formatTemperature(day.tempMin)}
               </span>
 
-              <div className="flex-1 h-1 bg-gray-200 rounded-full relative">
+              <div
+                className="flex-1 h-1 bg-gray-200 rounded-full relative overflow-hidden"
+                role="img"
+                aria-label={`최저 ${formatTemperature(day.tempMin)}, 최고 ${formatTemperature(day.tempMax)}`}
+              >
                 <div
                   className="absolute h-full bg-gradient-to-r from-blue-400 to-orange-400 rounded-full"
                   style={{
                     left: `${leftPercent}%`,
-                    width: `${Math.max(widthPercent, 10)}%`,
+                    width: `${widthPercent}%`,
                   }}
                 />
               </div>

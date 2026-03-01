@@ -40,7 +40,7 @@ export function HourlyForecast({ forecast, isLoading }: HourlyForecastProps) {
     <Card className="p-4 bg-white/80 backdrop-blur-sm">
       <h3 className="text-sm font-medium text-gray-600 mb-3">시간대별 예보</h3>
       <ScrollArea className="w-full whitespace-nowrap">
-        <div className="flex gap-4">
+        <div className="flex gap-4 pb-3">
           {forecast.map((hour, index) => (
             <motion.div
               key={hour.time}
