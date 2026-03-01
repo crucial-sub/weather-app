@@ -1,6 +1,7 @@
 'use client';
 
 // 즐겨찾기 그리드 위젯
+import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import { Card } from '@/shared/ui/card';
@@ -11,7 +12,7 @@ interface FavoritesGridProps {
   onAddClick: () => void;
 }
 
-export function FavoritesGrid({ onAddClick }: FavoritesGridProps) {
+export const FavoritesGrid = memo(function FavoritesGrid({ onAddClick }: FavoritesGridProps) {
   const { favorites, canAddMore } = useFavoritesStore();
 
   if (favorites.length === 0 && !canAddMore()) {
@@ -54,4 +55,4 @@ export function FavoritesGrid({ onAddClick }: FavoritesGridProps) {
       </p>
     </div>
   );
-}
+});

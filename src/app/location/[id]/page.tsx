@@ -101,7 +101,7 @@ export default function LocationDetailPage() {
       {/* 메인 컨텐츠 */}
       <main className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 py-6 space-y-6 responsive-transition">
         {/* 로딩 상태 */}
-        {isLoading && !currentWeather && (
+        {isLoading && !currentWeather ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -110,10 +110,10 @@ export default function LocationDetailPage() {
             <Loader2 className="h-12 w-12 animate-spin text-blue-500 mb-4" />
             <p className="text-gray-500">날씨 정보를 불러오는 중...</p>
           </motion.div>
-        )}
+        ) : null}
 
         {/* 에러 상태 */}
-        {weatherError && !currentWeather && (
+        {weatherError && !currentWeather ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -130,10 +130,10 @@ export default function LocationDetailPage() {
               뒤로 가기
             </Button>
           </motion.div>
-        )}
+        ) : null}
 
         {/* 날씨 정보 */}
-        {currentWeather && (
+        {currentWeather ? (
           <LayoutGroup>
             <motion.div
               initial={{ opacity: 0 }}
@@ -165,7 +165,7 @@ export default function LocationDetailPage() {
               </motion.div>
             </motion.div>
           </LayoutGroup>
-        )}
+        ) : null}
       </main>
     </div>
   );

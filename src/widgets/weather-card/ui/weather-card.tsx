@@ -1,12 +1,13 @@
 'use client';
 
 // 현재 날씨 카드 위젯
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Card } from '@/shared/ui/card';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { Droplets, Wind, Thermometer } from 'lucide-react';
-import { formatTemperature, getWeatherIconUrl } from '@/shared/lib';
+import { formatTemperature, getWeatherIconUrl } from '@/shared/lib/format';
 import type { Weather } from '@/entities/weather';
 
 interface WeatherCardProps {
@@ -16,7 +17,17 @@ interface WeatherCardProps {
   error?: string | null;
 }
 
-export function WeatherCard({ weather, locationName, isLoading, error }: WeatherCardProps) {
+// 정적 스켈레톤 JSX를 컴포넌트 외부로 호이스팅하여 매 렌더링마다 재생성 방지
+const weatherCardSkeleton = (
+  <Card className="p-6 space-y-4">
+    <Skeleton className="h-6 w-32 mx-auto" />
+    <Skeleton className="h-24 w-24 mx-auto rounded-full" />
+    <Skeleton className="h-12 w-20 mx-auto" />
+    <Skeleton className="h-4 w-40 mx-auto" />
+  </Card>
+);
+
+export const WeatherCard = memo(function WeatherCard({ weather, locationName, isLoading, error }: WeatherCardProps) {
   if (error) {
     return (
       <Card className="p-6 text-center">
@@ -26,14 +37,7 @@ export function WeatherCard({ weather, locationName, isLoading, error }: Weather
   }
 
   if (isLoading || !weather) {
-    return (
-      <Card className="p-6 space-y-4">
-        <Skeleton className="h-6 w-32 mx-auto" />
-        <Skeleton className="h-24 w-24 mx-auto rounded-full" />
-        <Skeleton className="h-12 w-20 mx-auto" />
-        <Skeleton className="h-4 w-40 mx-auto" />
-      </Card>
-    );
+    return weatherCardSkeleton;
   }
 
   return (
@@ -97,4 +101,4 @@ export function WeatherCard({ weather, locationName, isLoading, error }: Weather
       </Card>
     </motion.div>
   );
-}
+});

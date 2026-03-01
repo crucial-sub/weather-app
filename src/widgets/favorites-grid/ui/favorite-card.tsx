@@ -16,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
-import { formatTemperature, getWeatherIconUrl } from '@/shared/lib';
+import { formatTemperature, getWeatherIconUrl } from '@/shared/lib/format';
 import { useCurrentWeather } from '@/entities/weather';
 import { useFavoritesStore } from '@/features/manage-favorites';
 import type { Favorite } from '@/entities/location';

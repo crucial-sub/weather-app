@@ -1,20 +1,30 @@
 'use client';
 
 // 메인 페이지 - 현재 위치 날씨 및 즐겨찾기 표시
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, LayoutGroup } from 'framer-motion';
 import { MapPin, Search, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { useGeolocation } from '@/features/geolocation';
-import { useFavoritesStore } from '@/features/manage-favorites';
 import { useCurrentWeather, useHourlyForecast, useDailyForecast } from '@/entities/weather';
 import { useReverseGeocode } from '@/entities/location';
 import { WeatherCard } from '@/widgets/weather-card';
 import { HourlyForecast } from '@/widgets/hourly-forecast';
 import { WeeklyForecast } from '@/widgets/weekly-forecast';
 import { FavoritesGrid } from '@/widgets/favorites-grid';
-import { SearchModal } from '@/widgets/search-modal';
 import type { Location } from '@/entities/location';
+import dynamic from 'next/dynamic';
+
+// SearchModal은 검색 아이콘 클릭 시에만 필요하므로 동적 import로 초기 번들에서 분리
+const SearchModal = dynamic(
+  () => import('@/widgets/search-modal/ui/search-modal').then(m => ({ default: m.SearchModal })),
+  { ssr: false }
+);
+
+// 검색 버튼 hover/focus 시 SearchModal 청크 프리로드
+const preloadSearchModal = () => {
+  void import('@/widgets/search-modal/ui/search-modal');
+};
 
 export default function HomePage() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -28,9 +38,6 @@ export default function HomePage() {
     error: geoError,
     refresh: requestLocation,
   } = useGeolocation();
-
-  // 즐겨찾기 스토어
-  const { setCurrentLocation } = useFavoritesStore();
 
   // 현재 위치 유무 확인
   const hasGeoLocation = geoLat !== null && geoLon !== null;
@@ -66,28 +73,26 @@ export default function HomePage() {
     isLoading: isDailyLoading,
   } = useDailyForecast(lat, lon, { enabled: hasLocation });
 
-  // 현재 위치가 변경되면 스토어에 저장
-  useEffect(() => {
-    if (geoLocation && !selectedLocation) {
-      setCurrentLocation(geoLocation);
-    }
-  }, [geoLocation, selectedLocation, setCurrentLocation]);
-
   // 장소 선택 핸들러
-  const handleSelectLocation = (location: Location) => {
+  const handleSelectLocation = useCallback((location: Location) => {
     setSelectedLocation(location);
-  };
+  }, []);
 
   // 현재 위치로 돌아가기
-  const handleBackToCurrentLocation = () => {
+  const handleBackToCurrentLocation = useCallback(() => {
     setSelectedLocation(null);
     requestLocation();
-  };
+  }, [requestLocation]);
 
   // 새로고침 핸들러
-  const handleRefresh = () => {
+  const handleRefresh = useCallback(() => {
     refetchWeather();
-  };
+  }, [refetchWeather]);
+
+  // 검색 모달 열기 핸들러
+  const handleOpenSearch = useCallback(() => {
+    setIsSearchOpen(true);
+  }, []);
 
   // 로딩 상태
   const isLoading = isGeoLoading || (hasLocation && isWeatherLoading);
@@ -129,7 +134,9 @@ export default function HomePage() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsSearchOpen(true)}
+              onClick={handleOpenSearch}
+              onMouseEnter={preloadSearchModal}
+              onFocus={preloadSearchModal}
             >
               <Search className="h-5 w-5" />
             </Button>
@@ -140,7 +147,7 @@ export default function HomePage() {
       {/* 메인 컨텐츠 */}
       <main className="max-w-lg lg:max-w-6xl mx-auto px-4 lg:px-8 py-6 space-y-6 responsive-transition">
         {/* 로딩 상태 */}
-        {isLoading && !currentWeather && (
+        {isLoading && !currentWeather ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -151,10 +158,10 @@ export default function HomePage() {
               {isGeoLoading ? '현재 위치를 확인하고 있습니다...' : '날씨 정보를 불러오는 중...'}
             </p>
           </motion.div>
-        )}
+        ) : null}
 
         {/* 에러 상태 */}
-        {error && !currentWeather && (
+        {error && !currentWeather ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -171,10 +178,10 @@ export default function HomePage() {
               다시 시도
             </Button>
           </motion.div>
-        )}
+        ) : null}
 
         {/* 날씨 정보 */}
-        {currentWeather && (
+        {currentWeather ? (
           <LayoutGroup>
             <motion.div
               initial={{ opacity: 0 }}
@@ -205,14 +212,14 @@ export default function HomePage() {
                 />
 
                 {/* 즐겨찾기 그리드 */}
-                <FavoritesGrid onAddClick={() => setIsSearchOpen(true)} />
+                <FavoritesGrid onAddClick={handleOpenSearch} />
               </motion.div>
             </motion.div>
           </LayoutGroup>
-        )}
+        ) : null}
 
         {/* 위치 권한 요청 안내 (위치 정보 없을 때) */}
-        {!hasLocation && !isLoading && !error && (
+        {!hasLocation && !isLoading && !error ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -229,7 +236,7 @@ export default function HomePage() {
               위치 권한 허용하기
             </Button>
           </motion.div>
-        )}
+        ) : null}
       </main>
 
       {/* 검색 모달 */}

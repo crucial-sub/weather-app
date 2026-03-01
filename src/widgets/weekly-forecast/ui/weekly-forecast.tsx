@@ -1,11 +1,12 @@
 'use client';
 
 // 5일 예보 위젯
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Card } from '@/shared/ui/card';
 import { Skeleton } from '@/shared/ui/skeleton';
-import { formatTemperature, formatDay, getWeatherIconUrl } from '@/shared/lib';
+import { formatTemperature, formatDay, getWeatherIconUrl } from '@/shared/lib/format';
 import type { DailyForecast as DailyForecastType } from '@/entities/weather';
 
 interface WeeklyForecastProps {
@@ -13,22 +14,25 @@ interface WeeklyForecastProps {
   isLoading: boolean;
 }
 
-export function WeeklyForecast({ forecast, isLoading }: WeeklyForecastProps) {
-  if (isLoading) {
-    return (
-      <Card className="p-4">
-        <h3 className="text-sm font-medium text-gray-600 mb-3">5일 예보</h3>
-        <div className="space-y-3">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center justify-between">
-              <Skeleton className="h-4 w-12" />
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <Skeleton className="h-4 w-24" />
-            </div>
-          ))}
+// 정적 스켈레톤 JSX를 컴포넌트 외부로 호이스팅하여 매 렌더링마다 재생성 방지
+const weeklyForecastSkeleton = (
+  <Card className="p-4">
+    <h3 className="text-sm font-medium text-gray-600 mb-3">5일 예보</h3>
+    <div className="space-y-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="flex items-center justify-between">
+          <Skeleton className="h-4 w-12" />
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-4 w-24" />
         </div>
-      </Card>
-    );
+      ))}
+    </div>
+  </Card>
+);
+
+export const WeeklyForecast = memo(function WeeklyForecast({ forecast, isLoading }: WeeklyForecastProps) {
+  if (isLoading) {
+    return weeklyForecastSkeleton;
   }
 
   if (!forecast?.length) {
@@ -99,4 +103,4 @@ export function WeeklyForecast({ forecast, isLoading }: WeeklyForecastProps) {
       </div>
     </Card>
   );
-}
+});
