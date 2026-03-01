@@ -202,7 +202,7 @@ src/
 
 ## 배포
 
-- **배포 URL**: https://weather-app-crucialsubs-projects.vercel.app/
+- **배포 URL**: https://weather-app-three-mocha-57.vercel.app/
 - **GitHub**: https://github.com/crucial-sub/weather-app
 
 ### Vercel 배포 방법
